@@ -29,5 +29,17 @@ public class HomeControllerTest {
 		assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
 
 	}
+	
+	public void clickHomeAfterLogout() throws Exception {
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logout")));
+		WebElement title = driver.findElement(By.id("logout"));
+		title.click();
+		driver.get("http://localhost:" + this.port + "/home");
+		title.click();
+		assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+
+	}
 
 }

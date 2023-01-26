@@ -346,5 +346,15 @@ class CloudStorageApplicationTests {
 			System.out.println("Exception while logging out from application");
 			}
 	}
+	
+	@Test
+	public void accessHomeAfterLogout() {
+		HomeControllerTest logoutTest = new HomeControllerTest(driver, port);
+		try {
+			logoutTest.clickHomeAfterLogout();
+		} catch (Exception e) {
+			System.out.println("Exception while logging out from application");
+			}
+	}
 
 }
