@@ -1,11 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import org.springframework.web.multipart.MultipartFile;
-
 public class User {
 	
 	public User(Integer userId, String username, String salt, String password, String firstName, String lastName) {

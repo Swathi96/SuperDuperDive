@@ -22,9 +22,10 @@ public class AuthenticationService implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = authentication.getCredentials().toString();
+    public Authentication authenticate(Authentication auth) throws AuthenticationException {
+       
+    	String username = auth.getName();
+        String password = auth.getCredentials().toString();
 
         User user = userMapper.getUser(username);
         if (user != null) {

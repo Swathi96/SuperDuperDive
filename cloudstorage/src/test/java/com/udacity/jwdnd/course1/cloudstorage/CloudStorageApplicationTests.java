@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import com.udacity.jwdnd.course1.cloudstorage.controller.CredentialsControllerTest;
+import com.udacity.jwdnd.course1.cloudstorage.controller.HomeControllerTest;
 import com.udacity.jwdnd.course1.cloudstorage.controller.NotesControllerTest;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -227,7 +228,9 @@ class CloudStorageApplicationTests {
 		}
 
 	}
-
+/*
+ * Test if the application is working for use case of adding/ creating a new note
+ */
 	@Test
 	public void addNote() throws Exception {
 		
@@ -243,7 +246,10 @@ class CloudStorageApplicationTests {
 		}
 
 	}
-
+/*
+ * 
+ * Test if the application is working for the use case of editing an existing note
+ */
 	@Test
 	public void editNote() throws Exception {
 		
@@ -258,7 +264,9 @@ class CloudStorageApplicationTests {
 		}
 
 	}
-
+/*
+ * Test if the application is working for deletion of existing note based on first value set in the index xpath
+ */
 	@Test
 	public void deleteNote() throws Exception {
 		
@@ -274,7 +282,9 @@ class CloudStorageApplicationTests {
 		}
 
 	}
-
+/*
+ * Test if application is working for creation/ addition of new credential
+ */
 	@Test
 	public void addCredentials() throws Exception {
 		
@@ -290,7 +300,9 @@ class CloudStorageApplicationTests {
 		}
 
 	}
-
+/*
+ * Test if the application is working for editing the credential based on xpath first index
+ */
 	@Test
 	public void editCredentials() throws Exception {
 		
@@ -306,7 +318,9 @@ class CloudStorageApplicationTests {
 		}
 
 	}
-
+/*
+ * Test if the application is working for deletion of selected first index of the list of credentials
+ */
 	@Test
 	public void deleteCredentials() throws Exception {
 		
@@ -321,6 +335,16 @@ class CloudStorageApplicationTests {
 			System.out.println("Exception while deleting credentials");
 		}
 
+	}
+	
+	@Test
+	public void logoutTest() {
+		HomeControllerTest logoutTest = new HomeControllerTest(driver, port);
+		try {
+			logoutTest.clickLogout();
+		} catch (Exception e) {
+			System.out.println("Exception while logging out from application");
+			}
 	}
 
 }

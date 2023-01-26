@@ -10,19 +10,7 @@
 	th:href="@{/css/bootstrap.min.css}">
 
 <title>Home</title>
-<script>
-        $(document).ready(function(){
-            $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
-                localStorage.setItem('activeTab', $(e.target).attr('href'));
-            });
-            var activeTab = localStorage.getItem('activeTab');
-            if(activeTab){
-                $('#nav-tab a[href="' + activeTab + '"]').tab('show');
-            } else {
-                $('#nav-tab a[href="' + '#nav-files' + '"]').tab('show');
-            }
-        });
-    </script>
+
 </head>
 <body class="p-3 mb-2 bg-light text-black">
 	<div class="container">

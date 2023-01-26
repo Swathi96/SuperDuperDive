@@ -22,87 +22,111 @@ public class CredentialsController {
 
 	CredentialsService credService;
 	UserService userService;
-    List<Credentials> credentialsList = new ArrayList<>();
-    
+	List<Credentials> credentialsList = new ArrayList<>();
+
 	public CredentialsController(CredentialsService credService, UserService userService) {
 		this.credService = credService;
 		this.userService = userService;
 	}
+
 	@GetMapping()
-	public String loginView(Model model,Authentication auth) {
+	public String loginView(Model model, Authentication auth) {
 		String userName = auth.getName();
 		User user = userService.getUser(userName);
-		model.addAttribute("credentials",credService.getAllCredentials(user.getUserId()));
-	
+		model.addAttribute("credentials", credService.getAllCredentials(user.getUserId()));
+
 		return "home";
 	}
 
-    @PostMapping()
-    public String addCredentials(@ModelAttribute("credential") Credentials credentials,Authentication auth,Model model) {
+	@PostMapping()
+	public String addCredentials(@ModelAttribute("credential") Credentials credentials, Authentication auth,
+			Model model) {
 		String userName = auth.getName();
-		
-
+		boolean isCredentialAdded = false;
 		try {
 			User user = userService.getUser(userName);
-			
+
 			if (credentials.getCredentialid() != null) {
 				credentials.setUserId(user.getUserId());
-				credService.update(credentials);
-				model.addAttribute("successMessage", "Credential updated successfully");
+				isCredentialAdded = credService.update(credentials);
+				if (isCredentialAdded) {
+					model.addAttribute("successMessage", "Credential updated successfully");
+				} else {
+					model.addAttribute("failureMessage",
+							"Unable to make save changes on credentials. Please try again!");
+				}
 			} else {
-				credService.storeCredentials(credentials,user);
-				model.addAttribute("successMessage", "Credential created successfully");
+				isCredentialAdded = credService.storeCredentials(credentials, user);
+				if (isCredentialAdded) {
+					model.addAttribute("successMessage", "Credential created successfully");
+				} else {
+					model.addAttribute("failureMessage",
+							"Unable to make save changes on credentials. Please try again!");
+				}
 			}
 			model.addAttribute("credentials", credService.getAllCredentials(user.getUserId()));
-		} catch (Exception e) {
+		} catch (
 
-			model.addAttribute("failureMessage",
-					"Something went wrong, your changes were not saved. Please try again!");
+		Exception e) {
+
+			model.addAttribute("failureMessage", "Unable to make save changes on credentials. Please try again!");
 		}
 		return "result";
-	
-    	
-    }
-    
-    @GetMapping("/delete")
-    public String deleteCredentials(Authentication auth,@ModelAttribute("id") int credentialsId,Model model) {
-    	
-    	
+
+	}
+
+	@GetMapping("/delete")
+	public String deleteCredentials(Authentication auth, @ModelAttribute("id") int credentialsId, Model model) {
 
 		try {
 			String userName = auth.getName();
-
+			boolean isCredDeleted = false;
 			User user = userService.getUser(userName);
-			credService.deleteCredential(credentialsId);
+			isCredDeleted = credService.deleteCredential(credentialsId);
+			if (isCredDeleted) {
+				model.addAttribute("successMessage", "Credential deleted successfully");
+			} else {
 
+				model.addAttribute("failureMessage", "Unable to delete credential. Please try again!");
+			}
 			model.addAttribute("credentials", credService.getAllCredentials(user.getUserId()));
-			model.addAttribute("successMessage", "Credentials deleted successfully");
+
+		} catch (Exception e) {
+
+			model.addAttribute("failureMessage", "Unable to delete credentials. Please try again!");
+		}
+		return "result";
+
+	}
+
+	@GetMapping("/viewAll")
+	public String viewCredentials(Authentication auth, Model model) {
+		try {
+			String userName = auth.getName();
+			User user = userService.getUser(userName);
+			credentialsList.addAll(credService.getAllCredentials(user.getUserId()));
+			model.addAttribute("credentials", credentialsList);
 		} catch (Exception e) {
 
 			model.addAttribute("failureMessage",
-					"Something went wrong, your changes were not saved. Please try again!");
+					"Sorry, Unable to show all the credentials stored by you. Please try again!");
+
 		}
-		return "result";
-	
-    	
-    }
-  
-    
-    @GetMapping("/viewAll")
-    public String viewCredentials(Authentication auth,Model model) {
-    	String userName = auth.getName();
-		User user = userService.getUser(userName);
-    	credentialsList.addAll(credService.getAllCredentials(user.getUserId()));
-		model.addAttribute("credentials", credentialsList);
 		return "redirect:/";
-    	
-    }
-    @GetMapping("/view")
-    public String viewCredential(@ModelAttribute("id") int credentialsId,Model model) {
-    	model.addAttribute("credentials", credentialsList); 
-		Credentials credentialObj = credService.getCredentials(credentialsId);
-		model.addAttribute("credential", credentialObj);
+
+	}
+
+	@GetMapping("/view")
+	public String viewCredential(@ModelAttribute("id") int credentialsId, Model model) {
+		try {
+			model.addAttribute("credentials", credentialsList);
+			Credentials credentialObj = credService.getCredentials(credentialsId);
+			model.addAttribute("credential", credentialObj);
+		} catch (Exception e) {
+
+			model.addAttribute("failureMessage", "Unable to view selected Credential. Please try again!");
+		}
 		return "redirect:/";
-    	
-    }
+
+	}
 }

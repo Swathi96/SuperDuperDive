@@ -30,7 +30,6 @@ public class NotesController {
 		this.userService = userService;
 	}
 
-
 	@GetMapping()
 	public String viewNotes(Authentication auth, Model model) {
 		try {
@@ -38,8 +37,7 @@ public class NotesController {
 			User user = userService.getUser(userName);
 			model.addAttribute("notes", noteService.getNotes(user.getUserId()));
 		} catch (Exception e) {
-			model.addAttribute("failureMessage",
-					"Something went wrong, your notes were not found. Please try again!");
+			model.addAttribute("failureMessage", "Unable to view all the notes created by you. Please try again!");
 		}
 		return "redirect:/home";
 	}
@@ -49,22 +47,29 @@ public class NotesController {
 		try {
 			String userName = auth.getName();
 			User user = userService.getUser(userName);
-			
+			boolean isNotesSaved = false;
 			if (note.getNoteid() != null) {
 				note.setUserId(user.getUserId());
-				noteService.update(note);
-				model.addAttribute("successMessage", "Note updated successfully");
+				isNotesSaved = noteService.update(note);
+				if (isNotesSaved) {
+					model.addAttribute("successMessage", "Note updated successfully");
+				} else {
+					model.addAttribute("failureMessage", "Unable to make save changes for the note. Please try again!");
+				}
 			} else {
 				Note newNote = new Note(null, note.getTitle(), note.getDescription(), user.getUserId());
 				newNote.setUserId(user.getUserId());
-				noteService.storeNotes(newNote);
-				model.addAttribute("successMessage", "Note created successfully");
+				isNotesSaved = noteService.storeNotes(newNote);
+				if (isNotesSaved) {
+					model.addAttribute("successMessage", "Note created successfully");
+				} else {
+					model.addAttribute("failureMessage", "Unable to make save changes for the note. Please try again!");
+				}
 			}
 			model.addAttribute("notes", noteService.getNotes(user.getUserId()));
 		} catch (Exception e) {
 
-			model.addAttribute("failureMessage",
-					"Something went wrong, your changes were not saved. Please try again!");
+			model.addAttribute("failureMessage", "Unable to make save changes for the note. Please try again!");
 		}
 		return "result";
 	}
@@ -73,27 +78,34 @@ public class NotesController {
 	public String deleteNotes(Authentication auth, @RequestParam("id") Integer noteid, Model model) {
 		try {
 			String userName = auth.getName();
-
+			boolean isNoteDeleted = false;
 			User user = userService.getUser(userName);
-			noteService.deleteNote(noteid);
+			isNoteDeleted = noteService.deleteNote(noteid);
+			if (isNoteDeleted) {
+				
+				model.addAttribute("successMessage", "Note deleted successfully");
+			} else {
+
+				model.addAttribute("failureMessage", "Unable to delete selected Note. Please try again!");
+
+			}
 			model.addAttribute("notes", noteService.getNotes(user.getUserId()));
-			model.addAttribute("noteError", "Success");
-			model.addAttribute("successMessage", "Note deleted successfully");
 		} catch (Exception e) {
 
-			model.addAttribute("failureMessage",
-					"Something went wrong, your changes were not saved. Please try again!");
+			model.addAttribute("failureMessage", "Unable to delete selected Note. Please try again!");
 		}
 		return "result";
 	}
 
-
-
 	@GetMapping("/view")
 	public String viewNote(@RequestParam("id") Integer noteid, Model model) {
+		try {
+			model.addAttribute("note", noteService.getNote(noteid));
+			model.addAttribute("noteError", "Success");
+		} catch (Exception e) {
 
-		model.addAttribute("note", noteService.getNote(noteid));
-		model.addAttribute("noteError", "Success");
+			model.addAttribute("failureMessage", "Unable to view the selected Note. Please try again!");
+		}
 		return "redirect:/home";
 
 	}

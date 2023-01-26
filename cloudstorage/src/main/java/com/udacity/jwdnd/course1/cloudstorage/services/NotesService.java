@@ -13,12 +13,12 @@ public class NotesService {
 	public NotesService(NotesMapper notesMapper) {
 		this.notesMapper=notesMapper;
 	}
-	public int storeNotes(Note notes) {
+	public boolean storeNotes(Note notes) {
 	
 		return notesMapper.insert(new Note(null, notes.getTitle(), notes.getDescription(), notes.getUserId()));
 	}
 
-	public int update(Note notes) {
+	public boolean update(Note notes) {
 		
 		return notesMapper.update(new Note(notes.getNoteid(), notes.getTitle(), notes.getDescription(), notes.getUserId()));
 	}
@@ -34,7 +34,7 @@ public class NotesService {
 		return notesMapper.viewNotes(noteid);
 	}
 
-	public int deleteNote(Integer noteid) {
+	public boolean deleteNote(Integer noteid) {
 		return notesMapper.delete(noteid);
 	}
 	

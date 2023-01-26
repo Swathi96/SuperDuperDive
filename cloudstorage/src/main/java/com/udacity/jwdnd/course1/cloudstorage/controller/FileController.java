@@ -63,7 +63,7 @@ public class FileController {
 		model.addAttribute("successMessage", "File deleted successfully");
 		} catch (Exception e) {
 			model.addAttribute("failureMessage",
-					"Something went wrong, your changes were not saved. Please try again!");
+					"Unable to delete selected file. Please try again!");
 		}
 		return "result";
 	}
@@ -83,7 +83,7 @@ public class FileController {
 			
 		} catch (Exception e) {
 			model.addAttribute("failureMessage",
-					"Something went wrong, your changes were not saved. Please try again!");
+					"Unable to add file. Please try again!");
 		}
 		return "result";
 

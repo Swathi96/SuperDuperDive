@@ -32,14 +32,14 @@ public class HomeController {
 	}
 
 	@GetMapping
-	public String displayHome(Authentication auth, 
+	public String initializeHome(Authentication auth, 
 			Model model) {
 
 		if (userService.getUser(auth.getName()) != null && auth.isAuthenticated()) {
 			int id = userService.getUser(auth.getName()).getUserId();
 				model.addAttribute("files", fileService.getFiles(id));
 				model.addAttribute("notes", noteService.getNotes(id));
-				  model.addAttribute("encryptionService", encryptionService);
+				model.addAttribute("encryptionService", encryptionService);
 				model.addAttribute("credentials", credentialService.getAllCredentials(id));
 			return "home";
 		}
